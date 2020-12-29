@@ -2,9 +2,9 @@ C:\Users\tvmolin\source\repos\Conway\bin\Debug\Conway.exe.config
 C:\Users\tvmolin\source\repos\Conway\bin\Debug\Conway.exe
 C:\Users\tvmolin\source\repos\Conway\bin\Debug\Conway.pdb
 C:\Users\tvmolin\source\repos\Conway\obj\Debug\Conway.csprojAssemblyReference.cache
-C:\Users\tvmolin\source\repos\Conway\obj\Debug\Conway.Form1.resources
 C:\Users\tvmolin\source\repos\Conway\obj\Debug\Conway.Properties.Resources.resources
 C:\Users\tvmolin\source\repos\Conway\obj\Debug\Conway.csproj.GenerateResource.cache
 C:\Users\tvmolin\source\repos\Conway\obj\Debug\Conway.csproj.CoreCompileInputs.cache
 C:\Users\tvmolin\source\repos\Conway\obj\Debug\Conway.exe
 C:\Users\tvmolin\source\repos\Conway\obj\Debug\Conway.pdb
+C:\Users\tvmolin\source\repos\Conway\obj\Debug\Conway.GameForm.resources

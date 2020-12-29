@@ -1,60 +1,83 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 using System.Windows.Forms;
+using static Conway.Constants;
 
 namespace Conway
 {
-    public partial class Form1 : Form
+    public partial class GameForm : Form
     {
-
+        Game game;
+        Thread gameThread;
         Graphics graphics;
-        Pen gridPen = new Pen(Color.Black);
-        SolidBrush squareBrush = new SolidBrush(Color.Yellow);
-        Random random = new Random();
 
-        public Form1()
+        public GameForm()
         {
             InitializeComponent();
 
             graphics = pictureBox.CreateGraphics();
+            game = new Game(graphics);
+            game.render();
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void nextStepClick(object sender, EventArgs e)
         {
-            int areaSize = 30;
-            int squarePixels = 15;
-            int lineSize = 1;
-            for (int i = 0; i <= areaSize; i++)
-            {
-                int x = i * squarePixels;
-                graphics.DrawLine(gridPen, x, 0, x, areaSize * squarePixels);
-            }
+            game.advanceLogicStep();
+        }
+              
+        private void pictureBox_Click(object sender, EventArgs e)
+        {
+            MouseEventArgs me = (MouseEventArgs)e;
+            int tileX = me.Location.X / TILE_SIZE;
+            int tileY = me.Location.Y / TILE_SIZE;
 
-            for (int i = 0; i <= areaSize; i++)
-            {
-                int y = i * squarePixels;
-                graphics.DrawLine(gridPen, 0, y, areaSize * squarePixels, y);
-            }
-
-
-            for (int i = 0; i < 100; i++)
-            {
-                int x = random.Next(0, areaSize) * squarePixels + lineSize;
-                int y = random.Next(0, areaSize) * squarePixels + lineSize;
-                int fillSize = squarePixels - lineSize;
-                graphics.FillRectangle(squareBrush, new Rectangle(x, y, fillSize, fillSize));
-            }
+            game.toggleTile(new Tile(tileX, tileY));
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        private void pictureBox_Paint(object sender, PaintEventArgs e)
         {
+            game.render();
+        }
 
+        private void resetButton_Click(object sender, EventArgs e)
+        {
+            if(gameThread != null)
+            {
+                gameThread.Abort();
+            }
+            game.reset();
+            generationLabel.Text = game.generation.ToString();
+        }
+
+        private void playButton_Click(object sender, EventArgs e)
+        {
+            graphics.Clear(Color.Gray);
+            gameThread = new Thread(() =>
+            {
+                Thread.CurrentThread.IsBackground = true;
+
+                while (true)
+                {
+                    game.advanceLogicStep();
+                    generationLabel.Invoke((Action) delegate
+                    {
+                        generationLabel.Text = game.generation.ToString();
+                    });
+                    Thread.Sleep(300);
+                }
+
+            });
+
+            gameThread.Start();            
+        }
+
+        private void pauseButton_Click(object sender, EventArgs e)
+        {
+            if(gameThread != null)
+            {
+                gameThread.Abort();
+            }
         }
     }
 }
